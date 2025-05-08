@@ -10,7 +10,6 @@ __pycache__/
 *$py.class
 
 # — Configuration & secrets
-config.py
 instance/
 *.pem
 
@@ -43,3 +42,6 @@ Thumbs.db
 
 # — Chargements statiques (si jamais)
 # static/img/uploads/
+
+
+/app/database.db

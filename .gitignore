@@ -1,0 +1,40 @@
+# Environnements virtuels
+venv/
+.env/
+.env
+
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Config et secrets
+config.py        # si vous ne voulez PAS versionner vos clés via config.py
+instance/        # dossier d’instance Flask (si utilisé)
+
+# Fichiers de tests/couverture
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Packages
+*.egg-info/
+dist/
+build/
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Systèmes d’exploitation
+.DS_Store
+Thumbs.db
+
+# Logs et bases de données locales
+*.log
+*.sqlite3
+
+# Static uploads ou imgs générés dynamiquement
+# static/img/uploads/

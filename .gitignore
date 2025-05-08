@@ -1,40 +1,45 @@
-# Environnements virtuels
+# — Environnements virtuels
 venv/
-.env/
+
+# — Variables d'environnement
 .env
 
-# Fichiers Python compilés
+# — Fichiers Python compilés
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Config et secrets
-config.py        # si vous ne voulez PAS versionner vos clés via config.py
-instance/        # dossier d’instance Flask (si utilisé)
+# — Configuration & secrets
+config.py
+instance/
+*.pem
 
-# Fichiers de tests/couverture
+# — Script de création de structure (PowerShell)
+create-project-structure.ps1
+
+# — Tests & couverture
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Packages
+# — Distribution
 *.egg-info/
 dist/
 build/
 
-# IDE et éditeurs
+# — IDE & éditeurs
 .vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
 
-# Systèmes d’exploitation
+# — Systèmes d’exploitation
 .DS_Store
 Thumbs.db
 
-# Logs et bases de données locales
+# — Logs & base locale
 *.log
 *.sqlite3
 
-# Static uploads ou imgs générés dynamiquement
+# — Chargements statiques (si jamais)
 # static/img/uploads/

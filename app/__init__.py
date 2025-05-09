@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 import click
 from flask.cli import with_appcontext
@@ -6,10 +6,15 @@ from flask.cli import with_appcontext
 db = SQLAlchemy()
 
 def create_app():
-    # Crée l’appli et charge la config
-    app = Flask(__name__)
+    # Crée l'appli et charge la config
+    app = Flask(__name__, 
+                template_folder='../templates',
+                static_folder='../static')
     from config import Config
     app.config.from_object(Config)
+
+    # Configure le chemin des fichiers statiques pour inclure BASE_PATH
+    app.static_url_path = app.config['BASE_PATH'] + '/static'
 
     # Initialise SQLAlchemy
     db.init_app(app)

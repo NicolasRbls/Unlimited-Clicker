@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Unlimited Clicker - Administration{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2>Administration</h2>
+    
+    <div class="admin-section">
+        <h3>Statistiques du jeu</h3>
+        <div class="admin-stats">
+            <div class="admin-stat-card">
+                <h4>Joueurs inscrits</h4>
+                <p class="admin-stat-value">{{ users_count }}</p>
+            </div>
+            
+            <div class="admin-stat-card">
+                <h4>Clics générés</h4>
+                <p class="admin-stat-value">{{ total_clicks }}</p>
+            </div>
+            
+            <div class="admin-stat-card">
+                <h4>Améliorations achetées</h4>
+                <p class="admin-stat-value">{{ total_upgrades }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="admin-section">
+        <h3>Gestion des joueurs</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Date d'inscription</th>
+                    <th>Dernière connexion</th>
+                    <th>Clics</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.created_at }}</td>
+                    <td>{{ user.last_login }}</td>
+                    <td>{{ user.stats.total_clicks if user.stats else 0 }}</td>                    <td>
+                        <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="nes-btn is-primary">Éditer</a>
+                        <a href="{{ url_for('main.delete_user', user_id=user.id) }}" class="nes-btn is-error" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="admin-section">
+        <h3>Gestion des améliorations</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Coût de base</th>
+                    <th>Bonus de clic</th>
+                    <th>Bonus passif</th>
+                    <th>Débloqué à</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for upgrade in upgrades %}
+                <tr>
+                    <td>{{ upgrade.id }}</td>
+                    <td>{{ upgrade.name }}</td>
+                    <td>{{ upgrade.base_cost }}</td>
+                    <td>{{ upgrade.click_power_bonus }}</td>
+                    <td>{{ upgrade.passive_income_bonus }}</td>
+                    <td>{{ upgrade.unlocked_at_clicks }}</td>
+                    <td>
+                        <a href="{{ url_for('main.edit_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-primary">Éditer</a>
+                        <a href="{{ url_for('main.delete_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-error">Supprimer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <button id="add-upgrade" class="nes-btn is-success">Ajouter une amélioration</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

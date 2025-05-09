@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,9 +9,18 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, default=datetime.utcnow)
+    is_admin = db.Column(db.Boolean, default=False)  # Ajout du champ is_admin
     
     # Relation avec les statistiques du joueur
     stats = db.relationship('PlayerStats', backref='user', lazy=True, uselist=False)
+    
+    def set_password(self, password):
+        """Hache le mot de passe pour plus de sécurité"""
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        """Vérifie si le mot de passe est correct"""
+        return check_password_hash(self.password_hash, password)
     
     def __repr__(self):
         return f'<User {self.username}>'

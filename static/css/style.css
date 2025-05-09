@@ -1,0 +1,402 @@
+/* Styles personnalisés */
+:root {
+  --primary-color: #209cee;
+  --secondary-color: #ffdd57;
+  --tertiary-color: #ff3860;
+  --success-color: #23d160;
+  --text-color: #2c3e50;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+  --border-color: #dbdbdb;
+}
+
+/* Structure de base */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+header .title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Structure du jeu */
+.game-container {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.game-column {
+  flex: 1;
+}
+
+.main-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clicker-area {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#clicker {
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+#clicker:active {
+  transform: scale(0.95);
+}
+
+.click-counter {
+  margin: 1rem 0;
+}
+
+.click-counter h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#click-count {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.click-stats {
+  margin: 1rem 0;
+}
+
+.click-stats p {
+  margin: 0.5rem 0;
+}
+
+/* Section des améliorations */
+.upgrades {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.upgrades h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.upgrades-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.upgrade-item {
+  background-color: var(--card-background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s;
+}
+
+.upgrade-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upgrade-item h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.upgrade-item p {
+  margin: 0.3rem 0;
+}
+
+.upgrade-item .cost {
+  color: var(--tertiary-color);
+  font-weight: bold;
+}
+
+.upgrade-item .owned {
+  color: var(--primary-color);
+}
+
+.upgrade-item button {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+/* Section de prestige */
+.prestige-section {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.prestige-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--secondary-color);
+}
+
+.prestige-section p {
+  margin: 0.3rem 0;
+}
+
+#prestige-button {
+  margin-top: 1rem;
+}
+
+/* Contrôles de sauvegarde et chargement */
+.save-load-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Page de statistiques */
+.stats-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stats-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0.5rem 0;
+}
+
+.stat-desc {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Section des réalisations */
+.achievements-section {
+  margin-top: 3rem;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.achievement-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.achievement-card.locked {
+  opacity: 0.5;
+}
+
+.achievement-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-card p {
+  font-size: 0.9rem;
+}
+
+.achievement-card .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  background-color: var(--success-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* Section du classement */
+.leaderboard-section {
+  margin-top: 3rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.leaderboard-table th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.leaderboard-table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.leaderboard-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  nav ul {
+    flex-wrap: wrap;
+  }
+  
+  nav ul li {
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .save-load-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .save-load-controls button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Animation pour les clics */
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.click-animation {
+  position: absolute;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-weight: bold;
+  pointer-events: none;
+  animation: clickEffect 0.5s forwards;
+}
+
+/* Animation pour les nouvelles améliorations */
+@keyframes newUpgrade {
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.new-upgrade {
+  animation: newUpgrade 0.5s forwards;
+}

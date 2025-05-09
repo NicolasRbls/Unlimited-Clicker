@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Unlimited Clicker - Le jeu{% endblock %}
+
+{% block extra_head %}
+    <meta name="description" content="Un jeu clicker incroyable où vous cliquez pour gagner des points et débloquer des améliorations.">
+{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <div class="game-column main-game">
+        <div class="clicker-area">
+            <img src="{{ url_for('static', filename='img/clicker.png') }}" alt="Clicker" id="clicker">
+            
+            <div class="click-counter">
+                <h2>Score</h2>
+                <p id="click-count">0</p>
+            </div>
+            
+            <div class="click-stats">
+                <p>Puissance de clic: <span id="click-power">1.0</span></p>
+                <p>Production passive: <span id="passive-income">0.0</span>/sec</p>
+            </div>
+        </div>
+        
+        <div class="prestige-section">
+            <h3>Prestige</h3>
+            <p>Niveau: <span id="prestige-level">0</span></p>
+            <p>Multiplicateur: <span id="prestige-multiplier">x1.0</span></p>
+            <button id="prestige-button" class="nes-btn is-warning" disabled>Prestige (Requiert 10,000 clics)</button>
+        </div>
+    </div>
+    
+    <div class="game-column upgrades">
+        <h2>Améliorations</h2>
+        <div id="upgrades-container" class="upgrades-list">
+            <!-- Les améliorations seront injectées ici par JavaScript -->
+            {% for upgrade in upgrades %}
+            <div class="upgrade-item" data-id="{{ upgrade.id }}" data-unlocked-at="{{ upgrade.unlocked_at_clicks }}">
+                <h3>{{ upgrade.name }}</h3>
+                <p>{{ upgrade.description }}</p>
+                <p class="cost">Coût: <span>{{ upgrade.base_cost }}</span></p>
+                <p class="owned">Possédés: <span>0</span></p>
+                <button class="buy-upgrade nes-btn is-primary" data-id="{{ upgrade.id }}">Acheter</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="save-load-controls">
+    <button id="save-game" class="nes-btn is-success">Sauvegarder</button>
+    <button id="load-game" class="nes-btn is-primary">Charger</button>
+    <button id="reset-game" class="nes-btn is-error">Réinitialiser</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Modules du jeu -->
+<script src="{{ url_for('static', filename='js/modules/clicker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modules/upgrades.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modules/prestige.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

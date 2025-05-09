@@ -44,13 +44,38 @@ Le jeu sera accessible à l'adresse [http://localhost:5000](http://localhost:500
 ## Structure du projet
 
 ```
-app/           # Code de l'application (routes, modèles, utils)
-templates/     # Templates Jinja2
-static/        # Fichiers statiques (CSS, JS, images)
-config.py      # Configuration de l'application
-run.py         # Point d'entrée de l'application
-requirements.txt
-README.md
+Unlimited-Clicker/
+│
+├── app/
+│   ├── __init__.py
+│   ├── routes.py
+│   ├── models.py
+│   ├── database.db
+│   └── utils.py
+│
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── stats.html
+│   └── admin.html
+│
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   ├── game.js
+│   │   ├── modules/
+│   │   │   ├── clicker.js
+│   │   │   ├── upgrades.js
+│   │   │   └── prestige.js
+│   │   └── utils.js
+│   └── img/
+│       └── clicker.png
+│
+├── config.py
+├── .env
+├── run.py
+└── README.md
 ```
 
 ## Licence

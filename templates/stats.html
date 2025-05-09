@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Unlimited Clicker - Statistiques{% endblock %}
+
+{% block content %}
+<div class="stats-container">
+    <h2>Vos Statistiques</h2>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Clics</h3>
+            <p class="stat-value" id="stat-clicks">0</p>
+            <p class="stat-desc">Clics actuels</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Total des clics</h3>
+            <p class="stat-value" id="stat-total-clicks">0</p>
+            <p class="stat-desc">Depuis le début</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Puissance</h3>
+            <p class="stat-value" id="stat-click-power">1.0</p>
+            <p class="stat-desc">Clics par clic</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Passif</h3>
+            <p class="stat-value" id="stat-passive">0.0</p>
+            <p class="stat-desc">Clics par seconde</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Niveau Prestige</h3>
+            <p class="stat-value" id="stat-prestige-level">0</p>
+            <p class="stat-desc">Réinitialisations</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Multiplicateur</h3>
+            <p class="stat-value" id="stat-prestige-mult">x1.0</p>
+            <p class="stat-desc">Bonus de prestige</p>
+        </div>
+    </div>
+    
+    <div class="achievements-section">
+        <h2>Réalisations</h2>
+        <div id="achievements-container" class="achievements-grid">
+            <!-- Les réalisations seront injectées ici par JavaScript -->
+        </div>
+    </div>
+    
+    {% if session.get('user_id') %}
+    <div class="leaderboard-section">
+        <h2>Classement</h2>
+        <div id="leaderboard-container">
+            <!-- Le classement sera injecté ici par JavaScript -->
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/stats.js') }}"></script>
+{% endblock %}

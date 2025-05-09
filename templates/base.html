@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Unlimited Clicker{% endblock %}</title>
+    
+    <!-- ness.css - Minimaliste et rétro -->
+    <link href="https://cdn.jsdelivr.net/npm/ness.css@latest/css/ness.min.css" rel="stylesheet">
+    
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">Unlimited Clicker</h1>
+            <nav>
+                <ul>                    <li><a href="{{ url_for('main.index') }}">Jeu</a></li>
+                    <li><a href="{{ url_for('main.stats') }}">Statistiques</a></li>
+                    {% if session.get('user_id') %}
+                        {% if session.get('admin') %}
+                            <li><a href="{{ url_for('main.admin') }}">Administration</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('main.logout') }}">Déconnexion</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('main.login') }}">Connexion</a></li>
+                        <li><a href="{{ url_for('main.register') }}">Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        
+        <main>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="message">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Unlimited Clicker - Un jeu incroyable</p>
+        </footer>
+    </div>
+    
+    <!-- JavaScript de base -->
+    <script>
+        // Configuration globale pour le jeu
+        const CONFIG = {
+            basePath: '{{ basepath }}',
+            apiEndpoints: {
+                save: '{{ url_for("main.save_game") }}',
+                load: '{{ url_for("main.load_game") }}',
+                upgrades: '{{ url_for("main.get_upgrades") }}'
+            },
+            userLoggedIn: "{{ 'true' if session.get('user_id') else 'false' }}"
+        };
+    </script>
+    
+    <!-- JavaScript du jeu -->
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

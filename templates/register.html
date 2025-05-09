@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}Unlimited Clicker - Inscription{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-info">
+        <div class="nes-container with-title is-rounded">
+            <p class="title">Bienvenue sur Unlimited Clicker !</p>
+            <p>Rejoignez notre communauté de clickers et commencez votre aventure dès maintenant !</p>
+            
+            <div class="game-features">
+                <h3>Caractéristiques du jeu</h3>
+                <ul class="nes-list is-disc">
+                    <li>Cliquez pour gagner des points</li>
+                    <li>Débloquez des améliorations</li>
+                    <li>Générez des clics passifs</li>
+                    <li>Système de prestige pour recommencer plus fort</li>
+                    <li>Classement des meilleurs joueurs</li>
+                </ul>
+            </div>
+            
+            <p class="join-text">Déjà inscrit ? <a href="{{ url_for('main.login') }}">Se connecter</a></p>
+        </div>
+    </div>
+
+    <div class="auth-card">
+        <h2>Créer un compte</h2>
+        
+        {% if error %}
+        <div class="nes-container is-rounded is-error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('main.register') }}">
+            <div class="nes-field">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" id="username" name="username" class="nes-input" required minlength="3" maxlength="20">
+                <small>Entre 3 et 20 caractères, lettres et chiffres uniquement</small>
+            </div>
+            
+            <div class="nes-field">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" class="nes-input" required minlength="6">
+                <small>Minimum 6 caractères</small>
+            </div>
+            
+            <div class="nes-field">
+                <label for="confirm-password">Confirmer le mot de passe</label>
+                <input type="password" id="confirm-password" name="confirm_password" class="nes-input" required minlength="6">
+            </div>
+            
+            <div class="nes-checkbox-container">
+                <label>
+                    <input type="checkbox" class="nes-checkbox" name="terms" required>
+                    <span>J'accepte les <a href="#" class="terms-link">conditions d'utilisation</a></span>
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="nes-btn is-primary">S'inscrire</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    @media (min-width: 768px) {
+        .auth-container {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    
+    .auth-card {
+        background-color: var(--card-background);
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-card h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    
+    .nes-field {
+        margin-bottom: 1.5rem;
+    }
+    
+    .nes-field small {
+        display: block;
+        margin-top: 0.3rem;
+        font-size: 0.75rem;
+        color: #777;
+    }
+    
+    .nes-checkbox-container {
+        margin: 1.5rem 0;
+    }
+    
+    .nes-checkbox-container span {
+        margin-left: 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+    
+    .auth-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .auth-info .nes-container {
+        height: 100%;
+    }
+    
+    .game-features {
+        margin: 1.5rem 0;
+    }
+    
+    .game-features h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+    
+    .game-features ul {
+        padding-left: 1.5rem;
+    }
+    
+    .game-features li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .join-text {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+    
+    .join-text a, .terms-link {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .join-text a:hover, .terms-link:hover {
+        text-decoration: underline;
+    }
+    
+    .is-error {
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const form = document.querySelector('form');
+        
+        form.addEventListener('submit', (event) => {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                event.preventDefault();
+                alert('Les mots de passe ne correspondent pas.');
+                confirmPasswordInput.focus();
+            }
+        });
+        
+        document.querySelector('.terms-link').addEventListener('click', (event) => {
+            event.preventDefault();
+            
+            // Afficher une modale avec les conditions d'utilisation
+            const modal = document.createElement('div');
+            modal.className = 'terms-modal';
+            
+            modal.innerHTML = `
+                <div class="terms-modal-content">
+                    <h3>Conditions d'utilisation</h3>
+                    <div class="terms-text">
+                        <p>Ces conditions d'utilisation s'appliquent à votre utilisation du jeu Unlimited Clicker.</p>
+                        
+                        <h4>1. Compte utilisateur</h4>
+                        <p>Vous êtes responsable de la sécurité de votre compte et de votre mot de passe. Ne partagez pas vos identifiants avec d'autres personnes.</p>
+                        
+                        <h4>2. Comportement</h4>
+                        <p>Soyez respectueux envers les autres joueurs. Tout comportement abusif peut entraîner la suspension de votre compte.</p>
+                        
+                        <h4>3. Contenu</h4>
+                        <p>Vous êtes responsable de tout contenu que vous publiez dans le jeu, y compris votre nom d'utilisateur.</p>
+                        
+                        <h4>4. Modifications</h4>
+                        <p>Nous nous réservons le droit de modifier le jeu et ces conditions à tout moment.</p>
+                        
+                        <h4>5. Limitations</h4>
+                        <p>L'utilisation de bots, scripts ou tout autre moyen automatisé pour jouer est strictement interdite.</p>
+                    </div>
+                    <button id="close-terms" class="nes-btn is-primary">J'ai compris</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('close-terms').addEventListener('click', () => {
+                modal.remove();
+            });
+        });
+    });
+</script>
+
+<style>
+    .terms-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .terms-modal-content {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .terms-modal h3 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    
+    .terms-text {
+        margin-bottom: 2rem;
+    }
+    
+    .terms-text h4 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+    
+    .terms-text p {
+        margin-bottom: 1rem;
+    }
+    
+    #close-terms {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+    }
+</style>
+{% endblock %}

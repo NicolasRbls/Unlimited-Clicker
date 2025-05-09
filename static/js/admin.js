@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialisation
     loadAdminData();
     setupEventListeners();
+    setupDeleteButtons(); // Ajout de cette ligne pour gérer les boutons de suppression
     
     /**
      * Charge les données d'administration depuis le serveur
@@ -74,10 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetButton.classList.contains('is-primary')) {
                     // Bouton Éditer
                     editUser(userId);
-                } else if (targetButton.classList.contains('is-error')) {
-                    // Bouton Supprimer
-                    deleteUser(userId);
                 }
+                // Note: La suppression est gérée par setupDeleteButtons()
             });
         }
         
@@ -92,12 +91,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetButton.classList.contains('is-primary')) {
                     // Bouton Éditer
                     editUpgrade(upgradeId);
-                } else if (targetButton.classList.contains('is-error')) {
-                    // Bouton Supprimer
-                    deleteUpgrade(upgradeId);
                 }
+                // Note: La suppression est gérée par setupDeleteButtons()
             });
         }
+    }
+    
+    /**
+     * Configure les boutons de suppression pour utiliser des confirmations personnalisées
+     * NOUVEAU: Cette fonction remplace le confirm() standard
+     */
+    function setupDeleteButtons() {
+        // Gestion des boutons de suppression d'utilisateurs
+        document.querySelectorAll('.delete-user').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const userId = this.getAttribute('data-user-id');
+                const username = this.getAttribute('data-username') || 'cet utilisateur';
+                
+                // Créer une boîte de dialogue de confirmation personnalisée
+                showConfirmDialog(
+                    `Êtes-vous sûr de vouloir supprimer l'utilisateur "${username}" ?`,
+                    'Cette action est irréversible.',
+                    () => {
+                        // Si confirmé, rediriger vers l'URL de suppression
+                        window.location.href = this.getAttribute('href');
+                    }
+                );
+            });
+        });
+        
+        // Gestion des boutons de suppression d'upgrades
+        document.querySelectorAll('.delete-upgrade').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const upgradeId = this.getAttribute('data-upgrade-id');
+                const upgradeName = this.getAttribute('data-name') || 'cette amélioration';
+                
+                // Créer une boîte de dialogue de confirmation personnalisée
+                showConfirmDialog(
+                    `Êtes-vous sûr de vouloir supprimer l'amélioration "${upgradeName}" ?`,
+                    'Cette action est irréversible.',
+                    () => {
+                        // Si confirmé, rediriger vers l'URL de suppression
+                        window.location.href = this.getAttribute('href');
+                    }
+                );
+            });
+        });
     }
     
     /**
@@ -122,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${formatNumber(user.total_clicks || 0)}</td>
                 <td>
                     <a href="#" class="nes-btn is-primary" data-user-id="${user.id}">Éditer</a>
-                    <a href="#" class="nes-btn is-error" data-user-id="${user.id}">Supprimer</a>
+                    <a href="{{ url_for('main.delete_user', user_id=${user.id}) }}" class="nes-btn is-error delete-user" data-user-id="${user.id}" data-username="${user.username}">Supprimer</a>
                 </td>
             `;
             
@@ -150,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${upgrade.unlocked_at_clicks}</td>
                 <td>
                     <a href="#" class="nes-btn is-primary" data-upgrade-id="${upgrade.id}">Éditer</a>
-                    <a href="#" class="nes-btn is-error" data-upgrade-id="${upgrade.id}">Supprimer</a>
+                    <a href="{{ url_for('main.delete_upgrade', upgrade_id=${upgrade.id}) }}" class="nes-btn is-error delete-upgrade" data-upgrade-id="${upgrade.id}" data-name="${upgrade.name}">Supprimer</a>
                 </td>
             `;
             
@@ -260,12 +303,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Fonction pour supprimer un utilisateur
+     * Note: Cette fonction n'est plus appelée directement, remplacée par le gestionnaire d'événements dans setupDeleteButtons
      */
     function deleteUser(userId) {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
-            return;
-        }
-        
         fetchAPI(`/api/admin/users/delete`, 'POST', { id: userId })
             .then(response => {
                 if (response.success) {
@@ -393,12 +433,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Fonction pour supprimer une amélioration
+     * Note: Cette fonction n'est plus appelée directement, remplacée par le gestionnaire d'événements dans setupDeleteButtons
      */
     function deleteUpgrade(upgradeId) {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette amélioration ? Cette action est irréversible.')) {
-            return;
-        }
-        
         fetchAPI(`/api/admin/upgrades/delete`, 'POST', { id: upgradeId })
             .then(response => {
                 if (response.success) {
@@ -539,6 +576,55 @@ document.addEventListener('DOMContentLoaded', () => {
             return number.toString();
         }
     }
+    
+    /**
+     * NOUVEAU: Affiche une boîte de dialogue de confirmation personnalisée
+     */
+    function showConfirmDialog(title, message, onConfirm) {
+        // Créer les éléments de la modale
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-overlay';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+        
+        // Contenu de la modale
+        modalContent.innerHTML = `
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <div class="modal-buttons">
+                <button class="nes-btn is-primary confirm-button">Confirmer</button>
+                <button class="nes-btn is-error cancel-button">Annuler</button>
+            </div>
+        `;
+        
+        // Ajouter la modale au document
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+        
+        // Gestion des événements
+        modalContent.querySelector('.confirm-button').addEventListener('click', () => {
+            // Supprimer la modale
+            document.body.removeChild(modalOverlay);
+            
+            // Exécuter l'action de confirmation
+            if (typeof onConfirm === 'function') {
+                onConfirm();
+            }
+        });
+        
+        modalContent.querySelector('.cancel-button').addEventListener('click', () => {
+            // Supprimer la modale sans exécuter l'action
+            document.body.removeChild(modalOverlay);
+        });
+        
+        // Fermer la modale si on clique à l'extérieur
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                document.body.removeChild(modalOverlay);
+            }
+        });
+    }
 });
 
 // Ajouter des styles pour la modale d'administration
@@ -613,6 +699,35 @@ document.addEventListener('DOMContentLoaded', () => {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             grid-gap: 1.5rem;
             margin-bottom: 2rem;
+        }
+        
+        /* Styles pour la modale de confirmation */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
         }
     `;
     

@@ -20,7 +20,7 @@
             </div>
             
             <div class="admin-stat-card">
-                <h4>Améliorations achetées</h4>
+                <h4>Améliorations disponibles</h4>
                 <p class="admin-stat-value">{{ total_upgrades }}</p>
             </div>
         </div>
@@ -43,12 +43,13 @@
                 {% for user in users %}
                 <tr>
                     <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.created_at }}</td>
-                    <td>{{ user.last_login }}</td>
-                    <td>{{ user.stats.total_clicks if user.stats else 0 }}</td>                    <td>
-                        <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="nes-btn is-primary">Éditer</a>
-                        <a href="{{ url_for('main.delete_user', user_id=user.id) }}" class="nes-btn is-error" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a>
+                    <td>{{ user.username }}{% if user.is_admin %} <span class="admin-badge">Admin</span>{% endif %}</td>
+                    <td>{{ user.created_at.strftime('%d/%m/%Y %H:%M') if user.created_at else '-' }}</td>
+                    <td>{{ user.last_login.strftime('%d/%m/%Y %H:%M') if user.last_login else '-' }}</td>
+                    <td>{{ user.stats.total_clicks if user.stats else 0 }}</td>
+                    <td>
+                        <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="nes-btn is-primary edit-user" data-user-id="{{ user.id }}">Éditer</a>
+                        <a href="{{ url_for('main.delete_user', user_id=user.id) }}" class="nes-btn is-error delete-user" data-user-id="{{ user.id }}" data-username="{{ user.username }}">Supprimer</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -80,17 +81,129 @@
                     <td>{{ upgrade.passive_income_bonus }}</td>
                     <td>{{ upgrade.unlocked_at_clicks }}</td>
                     <td>
-                        <a href="{{ url_for('main.edit_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-primary">Éditer</a>
-                        <a href="{{ url_for('main.delete_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-error">Supprimer</a>
+                        <a href="{{ url_for('main.edit_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-primary edit-upgrade" data-upgrade-id="{{ upgrade.id }}">Éditer</a>
+                        <a href="{{ url_for('main.delete_upgrade', upgrade_id=upgrade.id) }}" class="nes-btn is-error delete-upgrade" data-upgrade-id="{{ upgrade.id }}" data-name="{{ upgrade.name }}">Supprimer</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         
-        <button id="add-upgrade" class="nes-btn is-success">Ajouter une amélioration</button>
+        <div class="admin-actions">
+            <a href="{{ url_for('main.edit_upgrade', upgrade_id=0) }}" class="nes-btn is-success" id="add-upgrade">Ajouter une amélioration</a>
+        </div>
     </div>
 </div>
+
+<style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .admin-container h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+    }
+    
+    .admin-section {
+        background-color: var(--card-background);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-section h3 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+    }
+    
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .admin-stat-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .admin-stat-card h4 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+    
+    .admin-stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 0;
+    }
+    
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .admin-table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    
+    .admin-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .admin-table tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    .admin-actions {
+        margin-top: 1.5rem;
+        text-align: right;
+    }
+    
+    .nes-btn {
+        margin: 0 0.25rem;
+    }
+    
+    .admin-badge {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        font-size: 0.7rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 10px;
+        margin-left: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .admin-table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}

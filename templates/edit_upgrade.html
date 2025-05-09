@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Unlimited Clicker - Édition d'amélioration{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h2>Édition de l'amélioration</h2>
+    
+    <div class="admin-form-container">
+        <form method="POST" action="{{ url_for('main.edit_upgrade', upgrade_id=upgrade.id) }}">
+            <div class="nes-field">
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" class="nes-input" value="{{ upgrade.name }}" required>
+            </div>
+            
+            <div class="nes-field">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" class="nes-input" value="{{ upgrade.description or '' }}">
+            </div>
+            
+            <div class="nes-field">
+                <label for="base_cost">Coût de base</label>
+                <input type="number" id="base_cost" name="base_cost" class="nes-input" value="{{ upgrade.base_cost }}" min="1" required>
+            </div>
+            
+            <div class="nes-field">
+                <label for="click_power_bonus">Bonus de puissance de clic</label>
+                <input type="number" id="click_power_bonus" name="click_power_bonus" class="nes-input" value="{{ upgrade.click_power_bonus }}" min="0" step="0.1">
+                <small class="field-help">Laissez à 0 si l'amélioration n'affecte pas la puissance de clic</small>
+            </div>
+            
+            <div class="nes-field">
+                <label for="passive_income_bonus">Bonus de revenu passif</label>
+                <input type="number" id="passive_income_bonus" name="passive_income_bonus" class="nes-input" value="{{ upgrade.passive_income_bonus }}" min="0" step="0.1">
+                <small class="field-help">Laissez à 0 si l'amélioration n'affecte pas le revenu passif</small>
+            </div>
+            
+            <div class="nes-field">
+                <label for="unlocked_at_clicks">Débloqué à (clics)</label>
+                <input type="number" id="unlocked_at_clicks" name="unlocked_at_clicks" class="nes-input" value="{{ upgrade.unlocked_at_clicks }}" min="0">
+                <small class="field-help">Nombre de clics requis pour débloquer cette amélioration</small>
+            </div>
+            
+            <div class="preview-section">
+                <h3>Aperçu</h3>
+                <div class="upgrade-preview">
+                    <div class="upgrade-item">
+                        <h3 id="preview-name">{{ upgrade.name }}</h3>
+                        <p id="preview-description">{{ upgrade.description or 'Sans description' }}</p>
+                        <p class="cost">Coût: <span id="preview-cost">{{ upgrade.base_cost }}</span></p>
+                        <div class="bonus-info">
+                            {% if upgrade.click_power_bonus > 0 %}
+                            <p class="click-bonus">+<span id="preview-click-bonus">{{ upgrade.click_power_bonus }}</span> puissance de clic</p>
+                            {% endif %}
+                            {% if upgrade.passive_income_bonus > 0 %}
+                            <p class="passive-bonus">+<span id="preview-passive-bonus">{{ upgrade.passive_income_bonus }}</span>/sec</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="nes-btn is-primary">Enregistrer</button>
+                <a href="{{ url_for('main.admin') }}" class="nes-btn is-error">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .admin-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background-color: var(--card-background);
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    
+    .admin-form-container {
+        margin-top: 1.5rem;
+    }
+    
+    .nes-field {
+        margin-bottom: 1.5rem;
+    }
+    
+    .field-help {
+        display: block;
+        margin-top: 0.3rem;
+        color: #777;
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+    
+    .preview-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border: 1px solid #ddd;
+    }
+    
+    .preview-section h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #495057;
+    }
+    
+    .upgrade-preview {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .upgrade-item {
+        background-color: white;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        width: 300px;
+    }
+    
+    .upgrade-item h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+    
+    .upgrade-item p {
+        margin: 0.3rem 0;
+    }
+    
+    .upgrade-item .cost {
+        color: var(--tertiary-color);
+        font-weight: bold;
+    }
+    
+    .bonus-info {
+        margin-top: 0.8rem;
+    }
+    
+    .click-bonus {
+        color: #dc3545;
+    }
+    
+    .passive-bonus {
+        color: #28a745;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Prévisualisation en temps réel
+        const nameInput = document.getElementById('name');
+        const descInput = document.getElementById('description');
+        const costInput = document.getElementById('base_cost');
+        const clickBonusInput = document.getElementById('click_power_bonus');
+        const passiveBonusInput = document.getElementById('passive_income_bonus');
+        
+        const previewName = document.getElementById('preview-name');
+        const previewDesc = document.getElementById('preview-description');
+        const previewCost = document.getElementById('preview-cost');
+        
+        // Mettre à jour le nom
+        nameInput.addEventListener('input', () => {
+            previewName.textContent = nameInput.value || 'Sans nom';
+        });
+        
+        // Mettre à jour la description
+        descInput.addEventListener('input', () => {
+            previewDesc.textContent = descInput.value || 'Sans description';
+        });
+        
+        // Mettre à jour le coût
+        costInput.addEventListener('input', () => {
+            previewCost.textContent = costInput.value || '0';
+        });
+        
+        // Mettre à jour les bonus
+        clickBonusInput.addEventListener('input', updateBonusDisplay);
+        passiveBonusInput.addEventListener('input', updateBonusDisplay);
+        
+        function updateBonusDisplay() {
+            const clickBonus = parseFloat(clickBonusInput.value) || 0;
+            const passiveBonus = parseFloat(passiveBonusInput.value) || 0;
+            const bonusInfo = document.querySelector('.bonus-info');
+            
+            // Vider l'affichage des bonus
+            bonusInfo.innerHTML = '';
+            
+            // Ajouter le bonus de clic s'il est supérieur à 0
+            if (clickBonus > 0) {
+                const clickBonusEl = document.createElement('p');
+                clickBonusEl.className = 'click-bonus';
+                clickBonusEl.innerHTML = `+<span>${clickBonus}</span> puissance de clic`;
+                bonusInfo.appendChild(clickBonusEl);
+            }
+            
+            // Ajouter le bonus passif s'il est supérieur à 0
+            if (passiveBonus > 0) {
+                const passiveBonusEl = document.createElement('p');
+                passiveBonusEl.className = 'passive-bonus';
+                passiveBonusEl.innerHTML = `+<span>${passiveBonus}</span>/sec`;
+                bonusInfo.appendChild(passiveBonusEl);
+            }
+        }
+    });
+</script>
+{% endblock %}

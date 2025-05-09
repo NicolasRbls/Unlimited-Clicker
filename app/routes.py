@@ -390,33 +390,120 @@ def edit_user(user_id):
         username = request.form.get('username')
         is_admin = request.form.get('is_admin') == 'on'
         
-        if username and username != user.username:
-            # Vérifier si le nom d'utilisateur est déjà pris
-            if User.query.filter_by(username=username).first() and username != user.username:
-                flash('Ce nom d\'utilisateur est déjà pris.')
-                return redirect(url_for('main.edit_user', user_id=user_id))
-            user.username = username
-        
-        user.is_admin = is_admin
-        db.session.commit()
-        flash('Utilisateur modifié avec succès.')
-        return redirect(url_for('main.admin'))
+        try:
+            if username and username != user.username:
+                # Vérifier si le nom d'utilisateur est déjà pris
+                existing_user = User.query.filter_by(username=username).first()
+                if existing_user and existing_user.id != user.id:
+                    flash('Ce nom d\'utilisateur est déjà pris.')
+                    return redirect(url_for('main.edit_user', user_id=user_id))
+                user.username = username
+            
+            # Mettre à jour le statut admin, sauf pour l'admin principal
+            if user.username != 'admin':
+                user.is_admin = is_admin
+            
+            # Si les stats sont fournies, les mettre à jour aussi
+            if user.stats:
+                clicks = request.form.get('clicks', type=int)
+                total_clicks = request.form.get('total_clicks', type=int)
+                prestige_level = request.form.get('prestige_level', type=int)
+                
+                if clicks is not None:
+                    user.stats.clicks = clicks
+                if total_clicks is not None:
+                    user.stats.total_clicks = total_clicks
+                if prestige_level is not None:
+                    user.stats.prestige_level = prestige_level
+            
+            db.session.commit()
+            flash('Utilisateur modifié avec succès.')
+            return redirect(url_for('main.admin'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erreur lors de la modification: {str(e)}')
+            return redirect(url_for('main.edit_user', user_id=user_id))
     
-    return render_template('admin.html', user=user)
+    # Obtenir les stats du joueur si elles existent
+    player_stats = None
+    if user.stats:
+        player_stats = user.stats
+    
+    return render_template('edit_user.html', user=user, stats=player_stats)
 
+# Route pour l'interface web (avec redirection)
 @main_bp.route('/api/admin/user/<int:user_id>/delete')
 @admin_required
 def delete_user(user_id):
-    """Supprime un utilisateur"""
+    """Supprime un utilisateur via l'interface web"""
     user = User.query.get_or_404(user_id)
+    
+    # Vérification pour ne pas supprimer son propre compte
     if user.id == session.get('user_id'):
         flash('Vous ne pouvez pas supprimer votre propre compte.')
         return redirect(url_for('main.admin'))
     
-    db.session.delete(user)
-    db.session.commit()
-    flash('Utilisateur supprimé avec succès.')
+    # Vérification pour ne pas supprimer l'admin principal
+    if user.username == 'admin':
+        flash('Impossible de supprimer l\'administrateur principal.')
+        return redirect(url_for('main.admin'))
+    
+    try:
+        # Suppression des statistiques d'abord
+        player_stats = PlayerStats.query.filter_by(user_id=user_id).first()
+        if player_stats:
+            db.session.delete(player_stats)
+            db.session.commit()
+        
+        # Ensuite suppression de l'utilisateur
+        db.session.delete(user)
+        db.session.commit()
+        
+        flash('Utilisateur supprimé avec succès.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Erreur lors de la suppression: {str(e)}', 'error')
+    
     return redirect(url_for('main.admin'))
+
+# Route pour l'API JSON (pour les appels AJAX)
+@main_bp.route('/api/admin/users/delete', methods=['POST'])
+@admin_required
+def api_delete_user():
+    """Supprime un utilisateur via l'API JSON"""
+    data = request.json
+    user_id = data.get('id')
+    
+    if not user_id:
+        return jsonify({'success': False, 'message': 'ID utilisateur manquant'})
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'success': False, 'message': 'Utilisateur non trouvé'})
+    
+    # Vérification pour ne pas supprimer son propre compte
+    if user.id == session.get('user_id'):
+        return jsonify({'success': False, 'message': 'Vous ne pouvez pas supprimer votre propre compte'})
+    
+    # Vérification pour ne pas supprimer l'admin principal
+    if user.username == 'admin':
+        return jsonify({'success': False, 'message': 'Impossible de supprimer l\'administrateur principal'})
+    
+    try:
+        # Suppression des statistiques d'abord
+        player_stats = PlayerStats.query.filter_by(user_id=user_id).first()
+        if player_stats:
+            db.session.delete(player_stats)
+            db.session.commit()
+        
+        # Ensuite suppression de l'utilisateur
+        db.session.delete(user)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Utilisateur supprimé avec succès'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'Erreur lors de la suppression: {str(e)}'})
 
 @main_bp.route('/api/admin/upgrade/<int:upgrade_id>/edit', methods=['GET', 'POST'])
 @admin_required

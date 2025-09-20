@@ -3,45 +3,66 @@
 {% block title %}Unlimited Clicker - Le jeu{% endblock %}
 
 {% block extra_head %}
-    <meta name="description" content="Un jeu clicker incroyable où vous cliquez pour gagner des points et débloquer des améliorations.">
+    <meta name="description" content="Un jeu clicker futuriste où vous cliquez pour gagner des points et débloquer des améliorations cosmiques.">
 {% endblock %}
 
 {% block content %}
 <div class="game-container">
-    <div class="game-column main-game">
+    <div class="main-game">
         <div class="clicker-area">
-            <img src="{{ url_for('static', filename='img/clicker.png') }}" alt="Clicker" id="clicker">
+            <div id="clicker">
+                <div class="clicker-inner"></div>
+            </div>
             
             <div class="click-counter">
-                <h2>Score</h2>
-                <p id="click-count">0</p>
+                <h2>Score Cosmique</h2>
+                <div id="click-count">0</div>
             </div>
             
             <div class="click-stats">
-                <p>Puissance de clic: <span id="click-power">1.0</span></p>
-                <p>Production passive: <span id="passive-income">0.0</span>/sec</p>
+                <div class="stat-item">
+                    <div class="label">Puissance</div>
+                    <div class="value" id="click-power">1.0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Production/sec</div>
+                    <div class="value" id="passive-income">0.0</div>
+                </div>
             </div>
         </div>
         
         <div class="prestige-section">
-            <h3>Prestige</h3>
-            <p>Niveau: <span id="prestige-level">0</span></p>
-            <p>Multiplicateur: <span id="prestige-multiplier">x1.0</span></p>
-            <button id="prestige-button" class="nes-btn is-warning" disabled>Prestige (Requiert 10,000 clics)</button>
+            <h3>🌟 Système de Prestige</h3>
+            <div class="prestige-info">
+                <div class="prestige-stat">
+                    <span class="label">Niveau:</span>
+                    <span id="prestige-level">0</span>
+                </div>
+                <div class="prestige-stat">
+                    <span class="label">Multiplicateur:</span>
+                    <span id="prestige-multiplier">x1.0</span>
+                </div>
+            </div>
+            <button id="prestige-button" class="btn btn-warning" disabled>
+                🚀 Prestige (Requiert 10,000 clics)
+            </button>
         </div>
     </div>
     
-    <div class="game-column upgrades">
-        <h2>Améliorations</h2>
+    <div class="upgrades">
+        <h2>⚡ Améliorations Cosmiques</h2>
         <div id="upgrades-container" class="upgrades-list">
-            <!-- Les améliorations seront injectées ici par JavaScript -->
             {% for upgrade in upgrades %}
             <div class="upgrade-item" data-id="{{ upgrade.id }}" data-unlocked-at="{{ upgrade.unlocked_at_clicks }}">
                 <h3>{{ upgrade.name }}</h3>
                 <p>{{ upgrade.description }}</p>
-                <p class="cost">Coût: <span>{{ upgrade.base_cost }}</span></p>
-                <p class="owned">Possédés: <span>0</span></p>
-                <button class="buy-upgrade nes-btn is-primary" data-id="{{ upgrade.id }}">Acheter</button>
+                <div class="upgrade-info">
+                    <span class="cost">💰 Coût: <span class="cost-value">{{ upgrade.base_cost }}</span></span>
+                    <span class="owned">🔢 Possédés: <span class="owned-value">0</span></span>
+                </div>
+                <button class="buy-upgrade btn" data-id="{{ upgrade.id }}">
+                    🛒 Acheter
+                </button>
             </div>
             {% endfor %}
         </div>
@@ -49,10 +70,107 @@
 </div>
 
 <div class="save-load-controls">
-    <button id="save-game" class="nes-btn is-success">Sauvegarder</button>
-    <button id="load-game" class="nes-btn is-primary">Charger</button>
-    <button id="reset-game" class="nes-btn is-error">Réinitialiser</button>
+    <button id="save-game" class="btn btn-success">💾 Sauvegarder</button>
+    <button id="load-game" class="btn">📂 Charger</button>
+    <button id="reset-game" class="btn btn-danger">🗑️ Réinitialiser</button>
 </div>
+
+<style>
+/* Styles spécifiques à la page de jeu */
+.clicker-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 60%);
+    position: relative;
+    overflow: hidden;
+}
+
+.clicker-inner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, var(--neon-blue), transparent);
+    animation: rotate 3s linear infinite;
+}
+
+.clicker-inner::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background: var(--dark-bg);
+    border-radius: 50%;
+}
+
+@keyframes rotate {
+    to { transform: rotate(360deg); }
+}
+
+.prestige-info {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem 0;
+}
+
+.prestige-stat {
+    text-align: center;
+}
+
+.prestige-stat .label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.prestige-stat span:last-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--neon-purple);
+}
+
+.upgrade-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.cost-value {
+    color: var(--neon-orange);
+}
+
+.owned-value {
+    color: var(--neon-green);
+}
+
+/* Effet de survol pour le clicker */
+#clicker:hover .clicker-inner::before {
+    animation-duration: 1s;
+}
+
+/* Responsive pour la page de jeu */
+@media (max-width: 768px) {
+    .prestige-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .upgrade-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+}
+</style>
 {% endblock %}
 
 {% block scripts %}

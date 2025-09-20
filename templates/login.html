@@ -1,3 +1,4 @@
+<!-- templates/login.html -->
 {% extends "base.html" %}
 
 {% block title %}Unlimited Clicker - Connexion{% endblock %}
@@ -5,121 +6,259 @@
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
-        <h2>Connexion</h2>
+        <h2>Connexion au Hub Cosmique</h2>
         
         {% if error %}
-        <div class="nes-container is-rounded is-error">
+        <div class="error-message">
+            <span class="error-icon">⚠️</span>
             <p>{{ error }}</p>
         </div>
         {% endif %}
         
-        <form method="POST" action="{{ url_for('main.login') }}">
-            <div class="nes-field">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" class="nes-input" required>
+        <form method="POST" action="{{ url_for('main.login') }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">Nom d'agent cosmique</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+                <div class="input-decoration"></div>
             </div>
             
-            <div class="nes-field">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" class="nes-input" required>
+            <div class="form-group">
+                <label for="password">Code d'accès</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+                <div class="input-decoration"></div>
             </div>
             
-            <div class="form-actions">
-                <button type="submit" class="nes-btn is-primary">Se connecter</button>
-            </div>
+            <button type="submit" class="btn auth-submit">
+                <span>🚀 Accéder au Hub</span>
+                <div class="button-glow"></div>
+            </button>
         </form>
         
-        <div class="auth-links">
-            <p>Pas encore de compte ? <a href="{{ url_for('main.register') }}">S'inscrire</a></p>
+        <div class="auth-footer">
+            <p>Nouvel agent ? <a href="{{ url_for('main.register') }}">Rejoindre la mission</a></p>
         </div>
     </div>
 
     <div class="auth-info">
-        <div class="nes-container with-title is-rounded">
-            <p class="title">Pourquoi se connecter ?</p>
-            <ul class="nes-list is-disc">
-                <li>Sauvegarde automatique de votre progression</li>
-                <li>Accès au classement des joueurs</li>
-                <li>Déblocage de fonctionnalités exclusives</li>
-                <li>Participez aux événements communautaires</li>
-            </ul>
+        <div class="info-card">
+            <h3>Pourquoi rejoindre le Hub ?</h3>
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <span class="benefit-icon">💾</span>
+                    <span>Sauvegarde inter-dimensionnelle</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🏆</span>
+                    <span>Classement galactique</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    <span>Fonctionnalités exclusives</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🌟</span>
+                    <span>Événements cosmiques</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.auth-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.error-message {
+    background: linear-gradient(135deg, rgba(255, 102, 102, 0.2), rgba(255, 0, 0, 0.1));
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-icon {
+    font-size: 1.2rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem;
+    background: var(--dark-card);
+    border: 2px solid var(--dark-accent);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.input-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    transition: width 0.3s ease;
+}
+
+.form-input:focus + .input-decoration {
+    width: 100%;
+}
+
+.auth-submit {
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--primary-gradient);
+    font-size: 1.1rem;
+    padding: 1.2rem;
+}
+
+.button-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.auth-submit:hover .button-glow {
+    left: 100%;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--dark-accent);
+}
+
+.auth-footer a {
+    color: var(--neon-blue);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.auth-footer a:hover {
+    color: var(--neon-purple);
+    text-shadow: 0 0 10px var(--neon-purple);
+}
+
+.auth-info {
+    display: flex;
+    align-items: center;
+}
+
+.info-card {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-accent);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+}
+
+.info-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--neon-green);
+}
+
+.benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--glass-bg);
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+}
+
+.benefit-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
     .auth-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        display: grid;
         grid-template-columns: 1fr;
         gap: 2rem;
     }
     
-    @media (min-width: 768px) {
-        .auth-container {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-    
     .auth-card {
-        background-color: var(--card-background);
-        border-radius: 8px;
         padding: 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    
-    .auth-card h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: var(--primary-color);
-    }
-    
-    .nes-field {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-actions {
-        display: flex;
-        justify-content: center;
-        margin-top: 2rem;
-    }
-    
-    .form-actions button {
-        width: 100%;
-    }
-    
-    .auth-links {
-        text-align: center;
-        margin-top: 1.5rem;
-        font-size: 0.9rem;
-    }
-    
-    .auth-links a {
-        color: var(--primary-color);
-        text-decoration: none;
-    }
-    
-    .auth-links a:hover {
-        text-decoration: underline;
-    }
-    
-    .auth-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    
-    .auth-info .nes-container {
-        height: 100%;
-    }
-    
-    .auth-info ul {
-        padding-left: 1.5rem;
-    }
-    
-    .auth-info li {
-        margin-bottom: 0.75rem;
-    }
+}
 </style>
 {% endblock %}

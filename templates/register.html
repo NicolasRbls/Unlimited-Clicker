@@ -1,3 +1,4 @@
+<!-- templates/register.html -->
 {% extends "base.html" %}
 
 {% block title %}Unlimited Clicker - Inscription{% endblock %}
@@ -5,273 +6,409 @@
 {% block content %}
 <div class="auth-container">
     <div class="auth-info">
-        <div class="nes-container with-title is-rounded">
-            <p class="title">Bienvenue sur Unlimited Clicker !</p>
-            <p>Rejoignez notre communauté de clickers et commencez votre aventure dès maintenant !</p>
+        <div class="welcome-card">
+            <h3>Bienvenue dans l'Univers Cosmique !</h3>
+            <p>Rejoignez des millions d'agents cosmiques dans la plus grande aventure de clics de la galaxie !</p>
             
             <div class="game-features">
-                <h3>Caractéristiques du jeu</h3>
-                <ul class="nes-list is-disc">
-                    <li>Cliquez pour gagner des points</li>
-                    <li>Débloquez des améliorations</li>
-                    <li>Générez des clics passifs</li>
-                    <li>Système de prestige pour recommencer plus fort</li>
-                    <li>Classement des meilleurs joueurs</li>
-                </ul>
+                <h4>Fonctionnalités Épiques</h4>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <span>Clics infinis</span>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <span>Améliorations cosmiques</span>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌟</div>
+                        <span>Système de prestige</span>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <span>Classement galactique</span>
+                    </div>
+                </div>
             </div>
             
-            <p class="join-text">Déjà inscrit ? <a href="{{ url_for('main.login') }}">Se connecter</a></p>
+            <div class="login-link">
+                <p>Déjà agent ? <a href="{{ url_for('main.login') }}">Accéder au Hub</a></p>
+            </div>
         </div>
     </div>
 
     <div class="auth-card">
-        <h2>Créer un compte</h2>
+        <h2>Devenir Agent Cosmique</h2>
         
         {% if error %}
-        <div class="nes-container is-rounded is-error">
+        <div class="error-message">
+            <span class="error-icon">⚠️</span>
             <p>{{ error }}</p>
         </div>
         {% endif %}
         
-        <form method="POST" action="{{ url_for('main.register') }}">
-            <div class="nes-field">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" class="nes-input" required minlength="3" maxlength="20">
-                <small>Entre 3 et 20 caractères, lettres et chiffres uniquement</small>
+        <form method="POST" action="{{ url_for('main.register') }}" class="auth-form">
+            <div class="form-group">
+                <label for="username">Nom d'agent</label>
+                <input type="text" id="username" name="username" class="form-input" required minlength="3" maxlength="20">
+                <div class="input-decoration"></div>
+                <small>3-20 caractères, lettres et chiffres uniquement</small>
             </div>
             
-            <div class="nes-field">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" class="nes-input" required minlength="6">
+            <div class="form-group">
+                <label for="password">Code d'accès</label>
+                <input type="password" id="password" name="password" class="form-input" required minlength="6">
+                <div class="input-decoration"></div>
                 <small>Minimum 6 caractères</small>
             </div>
             
-            <div class="nes-field">
-                <label for="confirm-password">Confirmer le mot de passe</label>
-                <input type="password" id="confirm-password" name="confirm_password" class="nes-input" required minlength="6">
+            <div class="form-group">
+                <label for="confirm-password">Confirmer le code</label>
+                <input type="password" id="confirm-password" name="confirm_password" class="form-input" required minlength="6">
+                <div class="input-decoration"></div>
             </div>
             
-            <div class="nes-checkbox-container">
-                <label>
-                    <input type="checkbox" class="nes-checkbox" name="terms" required>
-                    <span>J'accepte les <a href="#" class="terms-link">conditions d'utilisation</a></span>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="terms" required>
+                    <div class="checkbox-custom"></div>
+                    <span>J'accepte les <a href="#" class="terms-link">conditions cosmiques</a></span>
                 </label>
             </div>
             
-            <div class="form-actions">
-                <button type="submit" class="nes-btn is-primary">S'inscrire</button>
-            </div>
+            <button type="submit" class="btn auth-submit">
+                <span>🚀 Rejoindre l'Aventure</span>
+                <div class="button-glow"></div>
+            </button>
         </form>
     </div>
 </div>
 
 <style>
-    .auth-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        display: grid;
+.welcome-card {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-accent);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+}
+
+.welcome-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+.welcome-card > p {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.game-features {
+    margin: 2rem 0;
+}
+
+.game-features h4 {
+    font-size: 1.3rem;
+    color: var(--neon-purple);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.feature-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--dark-accent);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.checkbox-group {
+    margin: 1.5rem 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--dark-accent);
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label input:checked + .checkbox-custom {
+    background: var(--neon-blue);
+    border-color: var(--neon-blue);
+}
+
+.checkbox-label input:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+}
+
+.terms-link {
+    color: var(--neon-blue);
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+@media (max-width: 768px) {
+    .features-grid {
         grid-template-columns: 1fr;
-        gap: 2rem;
     }
-    
-    @media (min-width: 768px) {
-        .auth-container {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-    
-    .auth-card {
-        background-color: var(--card-background);
-        border-radius: 8px;
-        padding: 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .auth-card h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: var(--primary-color);
-    }
-    
-    .nes-field {
-        margin-bottom: 1.5rem;
-    }
-    
-    .nes-field small {
-        display: block;
-        margin-top: 0.3rem;
-        font-size: 0.75rem;
-        color: #777;
-    }
-    
-    .nes-checkbox-container {
-        margin: 1.5rem 0;
-    }
-    
-    .nes-checkbox-container span {
-        margin-left: 0.5rem;
-    }
-    
-    .form-actions {
-        display: flex;
-        justify-content: center;
-        margin-top: 2rem;
-    }
-    
-    .form-actions button {
-        width: 100%;
-    }
-    
-    .auth-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    
-    .auth-info .nes-container {
-        height: 100%;
-    }
-    
-    .game-features {
-        margin: 1.5rem 0;
-    }
-    
-    .game-features h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        color: var(--primary-color);
-    }
-    
-    .game-features ul {
-        padding-left: 1.5rem;
-    }
-    
-    .game-features li {
-        margin-bottom: 0.5rem;
-    }
-    
-    .join-text {
-        text-align: center;
-        margin-top: 1.5rem;
-    }
-    
-    .join-text a, .terms-link {
-        color: var(--primary-color);
-        text-decoration: none;
-    }
-    
-    .join-text a:hover, .terms-link:hover {
-        text-decoration: underline;
-    }
-    
-    .is-error {
-        margin-bottom: 1.5rem;
-    }
+}
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirm-password');
-        const form = document.querySelector('form');
-        
+document.addEventListener('DOMContentLoaded', () => {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const form = document.querySelector('form');
+    
+    // Validation des mots de passe
+    if (confirmPasswordInput) {
         form.addEventListener('submit', (event) => {
             if (passwordInput.value !== confirmPasswordInput.value) {
                 event.preventDefault();
-                alert('Les mots de passe ne correspondent pas.');
+                
+                // Créer un message d'erreur stylisé
+                const existingError = document.querySelector('.error-message');
+                if (existingError) existingError.remove();
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `
+                    <span class="error-icon">⚠️</span>
+                    <p>Les codes d'accès ne correspondent pas.</p>
+                `;
+                
+                form.insertBefore(errorDiv, form.firstChild);
                 confirmPasswordInput.focus();
             }
         });
-        
-        document.querySelector('.terms-link').addEventListener('click', (event) => {
+    }
+    
+    // Gestion du lien des conditions
+    const termsLink = document.querySelector('.terms-link');
+    if (termsLink) {
+        termsLink.addEventListener('click', (event) => {
             event.preventDefault();
-            
-            // Afficher une modale avec les conditions d'utilisation
-            const modal = document.createElement('div');
-            modal.className = 'terms-modal';
-            
-            modal.innerHTML = `
-                <div class="terms-modal-content">
-                    <h3>Conditions d'utilisation</h3>
-                    <div class="terms-text">
-                        <p>Ces conditions d'utilisation s'appliquent à votre utilisation du jeu Unlimited Clicker.</p>
-                        
-                        <h4>1. Compte utilisateur</h4>
-                        <p>Vous êtes responsable de la sécurité de votre compte et de votre mot de passe. Ne partagez pas vos identifiants avec d'autres personnes.</p>
-                        
-                        <h4>2. Comportement</h4>
-                        <p>Soyez respectueux envers les autres joueurs. Tout comportement abusif peut entraîner la suspension de votre compte.</p>
-                        
-                        <h4>3. Contenu</h4>
-                        <p>Vous êtes responsable de tout contenu que vous publiez dans le jeu, y compris votre nom d'utilisateur.</p>
-                        
-                        <h4>4. Modifications</h4>
-                        <p>Nous nous réservons le droit de modifier le jeu et ces conditions à tout moment.</p>
-                        
-                        <h4>5. Limitations</h4>
-                        <p>L'utilisation de bots, scripts ou tout autre moyen automatisé pour jouer est strictement interdite.</p>
-                    </div>
-                    <button id="close-terms" class="nes-btn is-primary">J'ai compris</button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            document.getElementById('close-terms').addEventListener('click', () => {
-                modal.remove();
-            });
+            showTermsModal();
         });
+    }
+});
+
+function showTermsModal() {
+    const modal = document.createElement('div');
+    modal.className = 'terms-modal';
+    
+    modal.innerHTML = `
+        <div class="terms-modal-content">
+            <h3>Conditions d'Utilisation Cosmiques</h3>
+            <div class="terms-scroll">
+                <section>
+                    <h4>1. Compte Agent</h4>
+                    <p>Vous êtes responsable de la sécurité de votre compte et de votre code d'accès. Ne partagez pas vos identifiants avec d'autres agents.</p>
+                </section>
+                
+                <section>
+                    <h4>2. Comportement Cosmique</h4>
+                    <p>Soyez respectueux envers les autres agents. Tout comportement toxique peut entraîner l'expulsion du Hub.</p>
+                </section>
+                
+                <section>
+                    <h4>3. Contenu Galactique</h4>
+                    <p>Vous êtes responsable de tout contenu que vous publiez, y compris votre nom d'agent.</p>
+                </section>
+                
+                <section>
+                    <h4>4. Modifications Universelles</h4>
+                    <p>Nous nous réservons le droit de modifier le jeu et ces conditions à tout moment pour maintenir l'équilibre cosmique.</p>
+                </section>
+                
+                <section>
+                    <h4>5. Limitations Dimensionnelles</h4>
+                    <p>L'utilisation de bots, scripts ou tout autre moyen automatisé est strictement interdite dans notre univers.</p>
+                </section>
+            </div>
+            <button id="close-terms" class="btn">J'ai compris</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Fermeture du modal
+    document.getElementById('close-terms').addEventListener('click', () => {
+        modal.remove();
     });
+    
+    // Fermeture en cliquant à l'extérieur
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
 </script>
 
 <style>
-    .terms-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
+.terms-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
     }
-    
-    .terms-modal-content {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        max-width: 600px;
-        width: 100%;
-        max-height: 90vh;
-        overflow-y: auto;
+    to {
+        opacity: 1;
     }
-    
-    .terms-modal h3 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: var(--primary-color);
+}
+
+.terms-modal-content {
+    background: var(--dark-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(20px);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
     }
-    
-    .terms-text {
-        margin-bottom: 2rem;
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
-    
-    .terms-text h4 {
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-color);
-    }
-    
-    .terms-text p {
-        margin-bottom: 1rem;
-    }
-    
-    #close-terms {
-        display: block;
-        margin: 0 auto;
-        width: 100%;
-    }
+}
+
+.terms-modal h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--neon-purple);
+    font-size: 1.5rem;
+}
+
+.terms-scroll {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    padding-right: 10px;
+}
+
+.terms-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.terms-scroll::-webkit-scrollbar-track {
+    background: var(--dark-accent);
+    border-radius: 3px;
+}
+
+.terms-scroll::-webkit-scrollbar-thumb {
+    background: var(--neon-blue);
+    border-radius: 3px;
+}
+
+.terms-scroll section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--glass-bg);
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+}
+
+.terms-scroll h4 {
+    color: var(--neon-blue);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.terms-scroll p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+#close-terms {
+    align-self: center;
+    min-width: 150px;
+}
 </style>
 {% endblock %}

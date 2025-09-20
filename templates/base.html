@@ -5,101 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Unlimited Clicker{% endblock %}</title>
     
-    <!-- ness.css - Minimaliste et rétro -->
-    <link href="https://cdn.jsdelivr.net/npm/ness.css@latest/css/ness.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Styles personnalisés -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
-    <!-- Styles pour les messages flash -->
-    <style>
-        .flash-messages {
-            max-width: 800px;
-            margin: 1rem auto;
-            padding: 0 1rem;
-        }
-        
-        .flash-message {
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .flash-message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .flash-message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .flash-message.info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        .flash-message.warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        
-        .flash-message.default {
-            background-color: #e9ecef;
-            color: #495057;
-            border: 1px solid #ced4da;
-        }
-        
-        .close-flash {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-    </style>
+    <!-- Meta pour PWA -->
+    <meta name="theme-color" content="#0f0f23">
+    <meta name="description" content="Unlimited Clicker - Le jeu de clicker ultime avec des graphismes futuristes">
     
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <!-- Particules animées -->
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
         <header>
             <h1 class="title">Unlimited Clicker</h1>
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('main.index') }}">Jeu</a></li>
-                    <li><a href="{{ url_for('main.stats') }}">Statistiques</a></li>
+                    <li><a href="{{ url_for('main.index') }}">🎮 Jeu</a></li>
+                    <li><a href="{{ url_for('main.stats') }}">📊 Statistiques</a></li>
                     {% if session.get('user_id') %}
                         {% if session.get('admin') %}
-                            <li><a href="{{ url_for('main.admin') }}">Administration</a></li>
+                            <li><a href="{{ url_for('main.admin') }}">⚙️ Administration</a></li>
                         {% endif %}
-                        <li><a href="{{ url_for('main.logout') }}">Déconnexion</a></li>
+                        <li><a href="{{ url_for('main.logout') }}">🚪 Déconnexion</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('main.login') }}">Connexion</a></li>
-                        <li><a href="{{ url_for('main.register') }}">Inscription</a></li>
+                        <li><a href="{{ url_for('main.login') }}">🔐 Connexion</a></li>
+                        <li><a href="{{ url_for('main.register') }}">✨ Inscription</a></li>
                     {% endif %}
                 </ul>
             </nav>
         </header>
         
         <main>
-            <!-- Nouvelle implémentation des messages flash avec catégories -->
+            <!-- Messages flash modernisés -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <div class="flash-messages">
+                    <div class="flash-messages" id="flash-messages">
                         {% for category, message in messages %}
                             <div class="flash-message {% if category %}{{ category }}{% else %}default{% endif %}">
-                                {{ message }}
-                                <button class="close-flash">&times;</button>
+                                <span class="flash-text">{{ message }}</span>
+                                <button class="close-flash" aria-label="Fermer">&times;</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -109,8 +59,8 @@
             {% block content %}{% endblock %}
         </main>
         
-        <footer>
-            <p>&copy; 2025 Unlimited Clicker - Un jeu incroyable</p>
+        <footer style="text-align: center; padding: 2rem 0; color: var(--text-secondary); font-size: 0.9rem;">
+            <p>&copy; 2025 Unlimited Clicker - Propulsé par l'énergie cosmique ⚡</p>
         </footer>
     </div>
     
@@ -124,37 +74,102 @@
                 load: '{{ url_for("main.load_game") }}',
                 upgrades: '{{ url_for("main.get_upgrades") }}'
             },
-            userLoggedIn: "{{ 'true' if session.get('user_id') else 'false' }}"
-        };
+                userLoggedIn: {% if session.get('user_id') %}true{% else %}false{% endif %}        };
+        
+        // Système de particules
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                // Couleurs variées
+                const colors = ['#00ffff', '#bf00ff', '#39ff14', '#ff6600'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Gestion des messages flash
+        function initFlashMessages() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            
+            flashMessages.forEach((message, index) => {
+                // Animation d'entrée décalée
+                message.style.animationDelay = (index * 0.1) + 's';
+                
+                // Bouton de fermeture
+                const closeBtn = message.querySelector('.close-flash');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        message.style.animation = 'slideOut 0.3s ease-in forwards';
+                        setTimeout(() => message.remove(), 300);
+                    });
+                }
+                
+                // Auto-fermeture après 5 secondes
+                setTimeout(() => {
+                    if (message.parentElement) {
+                        message.style.animation = 'slideOut 0.3s ease-in forwards';
+                        setTimeout(() => message.remove(), 300);
+                    }
+                }, 5000);
+            });
+        }
+        
+        // Animation de sortie pour les messages
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initFlashMessages();
+            
+            // Effet de parallaxe léger au scroll
+            let ticking = false;
+            
+            function updateParallax() {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('body::before');
+                
+                if (parallax) {
+                    const speed = scrolled * 0.5;
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+                
+                ticking = false;
+            }
+            
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', requestTick);
+        });
     </script>
     
     <!-- JavaScript du jeu -->
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    
-    <!-- Script pour la gestion des messages flash -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fermeture des messages flash
-            document.querySelectorAll('.close-flash').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    this.parentElement.remove();
-                });
-            });
-            
-            // Disparition automatique après 5 secondes
-            setTimeout(function() {
-                document.querySelectorAll('.flash-message').forEach(function(message) {
-                    message.style.opacity = '0';
-                    message.style.transition = 'opacity 0.5s';
-                    setTimeout(function() {
-                        if (message.parentElement) {
-                            message.remove();
-                        }
-                    }, 500);
-                });
-            }, 5000);
-        });
-    </script>
     
     {% block scripts %}{% endblock %}
 </body>

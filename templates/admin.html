@@ -89,7 +89,16 @@
         <div class="section-header">
             <h3>Arsenal d'Améliorations</h3>
             <div class="section-actions">
-                <a href="{{ url_for('main.edit_upgrade', upgrade_id=0) }}" class="btn btn-success">➕ Nouvelle Amélioration</a>
+                <button
+                    id="add-upgrade"
+                    class="nes-btn is-success"
+                    data-api="{{ url_for('main.admin_add_upgrade') }}"
+                    data-edit-template="{{ url_for('main.edit_upgrade', upgrade_id=999999) }}"
+                    >
+                    Ajouter une amélioration
+                    </button>
+
+
             </div>
         </div>
         

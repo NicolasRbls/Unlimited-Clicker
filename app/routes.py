@@ -536,7 +536,7 @@ def edit_upgrade(upgrade_id):
         flash('Amélioration modifiée avec succès.')
         return redirect(url_for('main.admin'))
     
-    return render_template('admin.html', upgrade=upgrade)
+    return render_template('edit_upgrade.html', upgrade=upgrade)
 
 @main_bp.route('/api/admin/upgrade/<int:upgrade_id>/delete')
 @admin_required

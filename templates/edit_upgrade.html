@@ -73,9 +73,9 @@
         max-width: 800px;
         margin: 2rem auto;
         background-color: var(--card-background);
-        border-radius: 8px;
+        border-radius: 12px;
         padding: 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
     
     .admin-container h2 {
@@ -84,14 +84,25 @@
         color: var(--primary-color);
     }
     
-    .admin-form-container {
-        margin-top: 1.5rem;
+    .admin-form-container { margin-top: 1.5rem; }
+    .nes-field { margin-bottom: 1.1rem; }
+    .nes-field label {
+        display:block; font-weight:600; margin-bottom:.4rem;
     }
-    
-    .nes-field {
-        margin-bottom: 1.5rem;
+    .nes-input {
+        width:100%;
+        padding:.9rem 1rem;
+        border:1px solid var(--glass-border);
+        border-radius:12px;
+        background:var(--dark-card);
+        color:var(--text-primary);
+        outline:none;
+        transition:border-color .2s, box-shadow .2s;
     }
-    
+    .nes-input:focus {
+        border-color:var(--neon-blue);
+        box-shadow:0 0 0 3px rgba(0,255,255,.15);
+    }
     .field-help {
         display: block;
         margin-top: 0.3rem;
@@ -99,11 +110,8 @@
         font-style: italic;
         font-size: 0.85rem;
     }
-    
     .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
+        display:flex; gap:1rem; justify-content:flex-end; margin-top:1.2rem;
     }
     
     .preview-section {
@@ -149,22 +157,13 @@
         font-weight: bold;
     }
     
-    .bonus-info {
-        margin-top: 0.8rem;
-    }
-    
-    .click-bonus {
-        color: #dc3545;
-    }
-    
-    .passive-bonus {
-        color: #28a745;
-    }
+    .bonus-info { margin-top: 0.8rem; }
+    .click-bonus { color: #dc3545; }
+    .passive-bonus { color: #28a745; }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Prévisualisation en temps réel
         const nameInput = document.getElementById('name');
         const descInput = document.getElementById('description');
         const costInput = document.getElementById('base_cost');
@@ -175,22 +174,15 @@
         const previewDesc = document.getElementById('preview-description');
         const previewCost = document.getElementById('preview-cost');
         
-        // Mettre à jour le nom
         nameInput.addEventListener('input', () => {
             previewName.textContent = nameInput.value || 'Sans nom';
         });
-        
-        // Mettre à jour la description
         descInput.addEventListener('input', () => {
             previewDesc.textContent = descInput.value || 'Sans description';
         });
-        
-        // Mettre à jour le coût
         costInput.addEventListener('input', () => {
             previewCost.textContent = costInput.value || '0';
         });
-        
-        // Mettre à jour les bonus
         clickBonusInput.addEventListener('input', updateBonusDisplay);
         passiveBonusInput.addEventListener('input', updateBonusDisplay);
         
@@ -198,19 +190,13 @@
             const clickBonus = parseFloat(clickBonusInput.value) || 0;
             const passiveBonus = parseFloat(passiveBonusInput.value) || 0;
             const bonusInfo = document.querySelector('.bonus-info');
-            
-            // Vider l'affichage des bonus
             bonusInfo.innerHTML = '';
-            
-            // Ajouter le bonus de clic s'il est supérieur à 0
             if (clickBonus > 0) {
                 const clickBonusEl = document.createElement('p');
                 clickBonusEl.className = 'click-bonus';
                 clickBonusEl.innerHTML = `+<span>${clickBonus}</span> puissance de clic`;
                 bonusInfo.appendChild(clickBonusEl);
             }
-            
-            // Ajouter le bonus passif s'il est supérieur à 0
             if (passiveBonus > 0) {
                 const passiveBonusEl = document.createElement('p');
                 passiveBonusEl.className = 'passive-bonus';
